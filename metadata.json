@@ -1,0 +1,7 @@
+{
+  "name": "Oracle AI Voice Assistant",
+  "description": "A minimalist conversational AI named Oracle using Gemini 2.5 Live API with real-time audio and visual feedback.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

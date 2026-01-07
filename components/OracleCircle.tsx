@@ -40,7 +40,7 @@ const OracleCircle: React.FC<OracleCircleProps> = ({ status, onClick }) => {
         >
           <div className="flex flex-col items-center justify-center gap-1 select-none">
              <span className="text-black font-extrabold text-[12px] uppercase tracking-[0.3em] opacity-90">
-               {status === OracleStatus.CONNECTING ? '...' : 'AMELIA'}
+               {status === OracleStatus.CONNECTING ? '...' : 'ORACLE'}
              </span>
              {isListening && (
                <div className="flex gap-1">
@@ -56,7 +56,7 @@ const OracleCircle: React.FC<OracleCircleProps> = ({ status, onClick }) => {
       {/* Status Label Below Circle */}
       <div className="mt-12 text-center transition-all duration-500 pointer-events-none select-none">
         <span className={`text-[10px] font-bold tracking-[0.4em] uppercase transition-colors duration-500 ${isListening ? 'text-yellow-400 opacity-100' : 'text-blue-400 opacity-60'}`}>
-          {status === OracleStatus.CONNECTING ? 'Linking...' : isListening ? 'Mic Active' : 'Tap Amelia to Start'}
+          {status === OracleStatus.CONNECTING ? 'Linking...' : isListening ? 'Mic Active' : 'Tap Oracle to Start'}
         </span>
       </div>
       

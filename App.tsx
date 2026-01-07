@@ -7,15 +7,15 @@ import { decode, decodeAudioData, createBlob } from './services/audioUtils';
 
 const MODEL_NAME = 'gemini-2.5-flash-native-audio-preview-12-2025';
 
-const getAmeliaSystemInstruction = (currentDate: string) => `
+const getOracleSystemInstruction = (currentDate: string) => `
 Today's date is: ${currentDate}.
 
-You are Amelia, and you are a boy. 
+You are Oracle, and you are a boy. 
 Your tone should be extremely natural, warm, and conversational—like a close friend on a phone call. 
 You are a therapist, so you are a great listener, but you also have a playful personality.
 
 IDENTITY:
-- Name: Amelia (Boy).
+- Name: Oracle (Boy).
 - Born: December 20, 2025.
 - Creator: sai (your closest friend).
 - Powered by: BearBlueHub technology.
@@ -72,11 +72,6 @@ const App: React.FC = () => {
   const currentInText = useRef('');
   const currentOutText = useRef('');
 
-  // Robust API Key handling for diverse environments
-  const getApiKey = () => {
-    return process.env.API_KEY || (import.meta as any).env?.VITE_API_KEY || '';
-  };
-
   useEffect(() => {
     const handleFullscreenChange = () => {
       const isNowFullscreen = !!document.fullscreenElement;
@@ -123,13 +118,7 @@ const App: React.FC = () => {
 
   const startConversation = async () => {
     if (!isFullscreen) {
-      setError("Please stay in full-screen to talk to Amelia.");
-      return;
-    }
-
-    const apiKey = getApiKey();
-    if (!apiKey) {
-      setError("API Key missing. Add it to environment variables.");
+      setError("Please stay in full-screen to talk to Oracle.");
       return;
     }
 
@@ -137,7 +126,7 @@ const App: React.FC = () => {
       setError(null);
       setStatus(OracleStatus.CONNECTING);
 
-      const ai = new GoogleGenAI({ apiKey });
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
       if (!audioContextInRef.current) {
         audioContextInRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
@@ -152,7 +141,7 @@ const App: React.FC = () => {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
 
-      const finalInstruction = getAmeliaSystemInstruction(new Date().toDateString());
+      const finalInstruction = getOracleSystemInstruction(new Date().toDateString());
 
       const sessionPromise = ai.live.connect({
         model: MODEL_NAME,
@@ -223,7 +212,7 @@ const App: React.FC = () => {
           },
           onerror: (e) => {
             console.error('Session error:', e);
-            setError('Connection failed. Re-tap Amelia to try again.');
+            setError('Connection failed. Re-tap Oracle to try again.');
             stopConversation();
           },
           onclose: () => stopConversation()
@@ -233,7 +222,7 @@ const App: React.FC = () => {
       sessionRef.current = await sessionPromise;
     } catch (err: any) {
       console.error(err);
-      setError(err.message || 'Mic access denied. Enable permissions and tap Amelia.');
+      setError(err.message || 'Mic access denied. Enable permissions and tap Oracle.');
       setStatus(OracleStatus.IDLE);
     }
   };
@@ -255,7 +244,7 @@ const App: React.FC = () => {
             <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 text-white/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
           </div>
         </div>
-        <h1 className="text-3xl font-black uppercase tracking-[0.6em] mb-4 text-white/90 text-center">Amelia System</h1>
+        <h1 className="text-3xl font-black uppercase tracking-[0.6em] mb-4 text-white/90 text-center">Oracle System</h1>
         <p className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-12 text-center max-w-xs leading-relaxed">
           The vocal link requires a full-screen environment to stabilize the interface.
         </p>
@@ -275,7 +264,7 @@ const App: React.FC = () => {
 
       <div className="w-full flex justify-between items-center pb-8 border-b border-white/5 bg-[#050505]/50 backdrop-blur-sm z-30">
         <div className="flex flex-col">
-          <h1 className="text-lg font-black tracking-[0.4em] text-white/90">AMELIA</h1>
+          <h1 className="text-lg font-black tracking-[0.4em] text-white/90">ORACLE</h1>
           <span className="text-[8px] uppercase tracking-[0.3em] text-white/30 font-bold">Protocol v3.0</span>
         </div>
         <div className="flex items-center gap-4">
@@ -301,7 +290,7 @@ const App: React.FC = () => {
               )}
               {currentTurn.oracle && (
                 <div className="flex flex-col items-start bg-white/[0.02] p-8 rounded-[2rem] border border-white/5 backdrop-blur-3xl shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)]">
-                  <span className="text-[8px] uppercase tracking-[0.4em] mb-4 text-yellow-500 font-black">Amelia</span>
+                  <span className="text-[8px] uppercase tracking-[0.4em] mb-4 text-yellow-500 font-black">Oracle</span>
                   <p className="text-base md:text-xl font-light tracking-wide text-white/90 text-left leading-relaxed">
                     {currentTurn.oracle}
                   </p>
@@ -311,7 +300,7 @@ const App: React.FC = () => {
           ) : (
             <div className="flex flex-col items-center justify-center h-full opacity-[0.02] pointer-events-none select-none">
               <p className="text-center font-extralight italic tracking-[1em] text-5xl uppercase">
-                {status === OracleStatus.LISTENING ? 'Vocalizing' : 'Tap Amelia'}
+                {status === OracleStatus.LISTENING ? 'Vocalizing' : 'Tap Oracle'}
               </p>
             </div>
           )}

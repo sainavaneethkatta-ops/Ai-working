@@ -126,6 +126,7 @@ const App: React.FC = () => {
       setError(null);
       setStatus(OracleStatus.CONNECTING);
 
+      // Strictly using process.env.API_KEY as required
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
       if (!audioContextInRef.current) {
@@ -222,7 +223,7 @@ const App: React.FC = () => {
       sessionRef.current = await sessionPromise;
     } catch (err: any) {
       console.error(err);
-      setError(err.message || 'Mic access denied. Enable permissions and tap Oracle.');
+      setError('Access denied. Ensure you have provided a valid Gemini API key as an environment variable and enabled microphone access.');
       setStatus(OracleStatus.IDLE);
     }
   };

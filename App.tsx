@@ -72,7 +72,11 @@ const App: React.FC = () => {
   const currentInText = useRef('');
   const currentOutText = useRef('');
 
-  // Handle Fullscreen transitions
+  // Robust API Key handling for diverse environments
+  const getApiKey = () => {
+    return process.env.API_KEY || (import.meta as any).env?.VITE_API_KEY || '';
+  };
+
   useEffect(() => {
     const handleFullscreenChange = () => {
       const isNowFullscreen = !!document.fullscreenElement;
@@ -123,11 +127,17 @@ const App: React.FC = () => {
       return;
     }
 
+    const apiKey = getApiKey();
+    if (!apiKey) {
+      setError("API Key missing. Add it to environment variables.");
+      return;
+    }
+
     try {
       setError(null);
       setStatus(OracleStatus.CONNECTING);
 
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const ai = new GoogleGenAI({ apiKey });
 
       if (!audioContextInRef.current) {
         audioContextInRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
@@ -236,7 +246,6 @@ const App: React.FC = () => {
     }
   };
 
-  // Entry screen if not in fullscreen
   if (!isFullscreen) {
     return (
       <div className="fixed inset-0 bg-[#050505] flex flex-col items-center justify-center p-8 z-[100] transition-all duration-700">
@@ -246,9 +255,9 @@ const App: React.FC = () => {
             <svg xmlns="http://www.w3.org/2000/svg" className="w-12 h-12 text-white/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
           </div>
         </div>
-        <h1 className="text-3xl font-black uppercase tracking-[0.6em] mb-4 text-white/90">Amelia System</h1>
+        <h1 className="text-3xl font-black uppercase tracking-[0.6em] mb-4 text-white/90 text-center">Amelia System</h1>
         <p className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-12 text-center max-w-xs leading-relaxed">
-          The link requires a full-screen environment to stabilize the vocal interface.
+          The vocal link requires a full-screen environment to stabilize the interface.
         </p>
         <button
           onClick={enterFullscreen}
@@ -262,10 +271,8 @@ const App: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen p-6 max-w-4xl mx-auto overflow-hidden animate-in fade-in duration-1000">
-      {/* Dynamic Background Pulse */}
       <div className={`fixed inset-0 pointer-events-none transition-all duration-1000 ${status === OracleStatus.LISTENING ? 'bg-yellow-500/5' : 'bg-transparent'}`} />
 
-      {/* Modern Header */}
       <div className="w-full flex justify-between items-center pb-8 border-b border-white/5 bg-[#050505]/50 backdrop-blur-sm z-30">
         <div className="flex flex-col">
           <h1 className="text-lg font-black tracking-[0.4em] text-white/90">AMELIA</h1>
@@ -278,10 +285,8 @@ const App: React.FC = () => {
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center w-full py-8">
-        {/* Interaction triggered by tapping Amelia */}
         <OracleCircle status={status} onClick={handleToggle} />
         
-        {/* Live Transcription Overlay */}
         <div className="mt-16 w-full h-56 flex flex-col items-center justify-center px-4">
           {error && <p className="text-red-400 text-[10px] mb-8 uppercase tracking-[0.3em] animate-pulse font-black bg-red-500/10 px-4 py-2 rounded-full border border-red-500/20">{error}</p>}
           

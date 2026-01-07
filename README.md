@@ -1,20 +1,29 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
 
-# Run and deploy your AI Studio app
+# 🎙️ Amelia AI Voice Assistant
 
-This contains everything you need to run your app locally.
+Amelia is a high-fidelity conversational AI powered by Gemini 2.5 Flash Native Audio. It features a minimalist, vocal-first interface designed for natural, friend-like interactions.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1ibN5ixKC8ZOv8Ew5Tk0oDAH5yRLCYr_z
+## 🚀 Get Your Public URL
 
-## Run Locally
+### 1. GitHub Setup
+- Create a new repository on [GitHub](https://github.com/).
+- Upload all the files in this project to the repository.
 
-**Prerequisites:**  Node.js
+### 2. Deploy with Vercel (Recommended)
+Vercel is the easiest and most secure way to host this app.
+1. Sign in to [Vercel](https://vercel.com/) and click **"Add New"** > **"Project"**.
+2. Select your GitHub repository.
+3. **Environment Variables**:
+   - Before deploying, open the **Environment Variables** section.
+   - **Key**: `API_KEY`
+   - **Value**: (Your Gemini API Key from ai.google.dev)
+4. Click **Deploy**. Vercel will generate a public URL for you.
 
+## 🛠️ Tech Stack
+- **AI**: Gemini 2.5 Flash Native Audio
+- **Frontend**: React 19 + TypeScript
+- **Styling**: Tailwind CSS
+- **Audio**: Real-time PCM encoding/decoding via Web Audio API
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+---
+Built by BearBlueHub Architecture.
